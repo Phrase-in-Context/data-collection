@@ -1,0 +1,13 @@
+spacy
+nltk
+pandas
+scipy
+sklearn
+simcse
+requests
+datasets
+tqdm
+beautifulsoup4
+random_word
+language-tool-python
+
