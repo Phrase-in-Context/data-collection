@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+datasets/data_15K_pairs_fully_verified_official.csv
