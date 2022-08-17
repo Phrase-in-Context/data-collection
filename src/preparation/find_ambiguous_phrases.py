@@ -1,5 +1,4 @@
 import json
-import logging
 import pickle
 import random
 import time
@@ -23,8 +22,11 @@ from bs4 import BeautifulSoup
 http = urllib3.PoolManager()
 
 
+DATA_PATH = "../../data/"
+
+
 # Step 3: Phrase with context collection
-def handle_extracted_wiki_phrases_and_sentences():
+def handle_extracted_wiki_phrases_and_sentences(debug=False):
     '''
     Load a pickle file generated from extracted_wiki_phrases.py and
     merge unique phrases and combine their corresponding sentences to one list
@@ -50,26 +52,27 @@ def handle_extracted_wiki_phrases_and_sentences():
             example_dict[example[0]] = []
         example_dict[example[0]].append((example[1], example[2], example[3], example[4]))
 
-    removed_phrases_subset = random.sample(removed_phrases, k=100)
-
     print("len(examples) = {}/{}".format(len(list(set(examples))), len(examples)))
     print("len(removed_phrases) = {}/{}".format(len(list(set(removed_phrases))), len(removed_phrases)))
     print("Counter(list(set(removed_phrases))) = {}".format(Counter(list(set(removed_phrases)))))
-    [print(phrase) for phrase in removed_phrases_subset]
+
+    if debug:
+        removed_phrases_subset = random.sample(removed_phrases, k=100)
+        [print(phrase) for phrase in removed_phrases_subset]
 
     # Remove duplicate sentences for each phrase and remove a phrase if it has less than 2 sentences
-    # example_dict = {key: list(set(values)) for key, values in example_dict.items()}
-    # example_dict = dict(sorted(example_dict.items(), key=lambda x: len(x[1]), reverse=True))
-    # new_example_dict = {key: values for (key, values) in example_dict.items() if len(values) > 1}
-    #
-    # print("The number of phrases BEFORE and AFTER filtering those having less than 2 sentences: {} and {}".format(len(example_dict.keys()), len(new_example_dict.keys())))
-    # print("Dumping all UNIQUE phrases to pickle file...")
-    #
-    # wiki_phrases_pickle_fp = CONSTRUCTION_DIR + "{}_filtered.pickle".format(FILE_NAME)
-    # with open(wiki_phrases_pickle_fp, "wb") as pickle_file:
-    #     pickle.dump(new_example_dict, pickle_file)
+    example_dict = {key: list(set(values)) for key, values in example_dict.items()}
+    example_dict = dict(sorted(example_dict.items(), key=lambda x: len(x[1]), reverse=True))
+    new_example_dict = {key: values for (key, values) in example_dict.items() if len(values) > 1}
 
-    # return new_example_dict
+    print("The number of phrases BEFORE and AFTER filtering those having less than 2 sentences: {} and {}".format(len(example_dict.keys()), len(new_example_dict.keys())))
+    print("Dumping all UNIQUE phrases to pickle file...")
+
+    wiki_phrases_pickle_fp = CONSTRUCTION_DIR + "{}_filtered.pickle".format(FILE_NAME)
+    with open(wiki_phrases_pickle_fp, "wb") as pickle_file:
+        pickle.dump(new_example_dict, pickle_file)
+
+    return new_example_dict
 
 
 # Step 4: Find phrases of ambiguous words
@@ -202,8 +205,8 @@ def read_output_files_and_sort_for_AMT():
         # Prepare Wiki sentences by checking if the preprocessed wiki file exists to load
         # Otherwise, load the original wiki file
         start_time = time.time()
-        wiki_fp = "../data/wiki/wikiextractor/enwiki-latest-pages-articles.txt"
-        wiki_pickle_fp = "../data/wiki/wikiextractor/wiki_objects_filtered.pickle"
+        wiki_fp = DATA_PATH + "wiki/wikiextractor/enwiki-latest-pages-articles.txt"
+        wiki_pickle_fp = DATA_PATH + "wiki/wikiextractor/wiki_objects_filtered.pickle"
 
         if exists(wiki_pickle_fp):
             with open(wiki_pickle_fp, "rb") as pickle_file:
@@ -232,7 +235,6 @@ def read_output_files_and_sort_for_AMT():
             print("Finish loading Wiki objects from pickle file...")
 
         # Create a list of wiki articles for speeding up the searching process
-        # wiki_article_dict = {wiki_obj["url"]: tokenizer.tokenize(wiki_obj["text"]) for wiki_obj in tqdm(wiki_objs)}
         wiki_article_dict = {wiki_obj["url"]: wiki_obj["text"] for wiki_obj in tqdm(wiki_objs)}
         return wiki_article_dict
 
@@ -270,17 +272,6 @@ def read_output_files_and_sort_for_AMT():
     wiki_cache = {}
     number_extra_sentences = 2
 
-    # pickle_file_list = [
-    #     "ambiguous_candidates_batch_0_-0.3_0.2_5_25_32_3.pickle",
-    #     "ambiguous_candidates_batch_1_-0.3_0.2_5_25_32_3.pickle",
-    #     "ambiguous_candidates_batch_2_-0.3_0.2_5_25_32_3.pickle",
-    #     "ambiguous_candidates_batch_3_-0.3_0.2_5_25_32_3.pickle",
-    #     "ambiguous_candidates_batch_4_-0.3_0.2_5_25_32_3.pickle",
-    #     "ambiguous_candidates_batch_5_-0.3_0.2_5_25_32_3.pickle",
-    #     "ambiguous_candidates_batch_6_-0.3_0.2_5_25_32_3.pickle",
-    #     "ambiguous_candidates_batch_7_-0.3_0.2_5_25_32_3.pickle"
-    # ]
-
     amt_data = {"phrase": [],
                 "original_sentence1": [], "original_sentence2": [],
                 "sentence1": [], "sentence2": [],
@@ -295,12 +286,6 @@ def read_output_files_and_sort_for_AMT():
     skip_count = 0
     count_double_propn = 0
     phrase_list = []
-
-    # Load phrase_list from pickle files
-    # for file_name in pickle_file_list:
-    #     print("Handling file {}".format(file_name))
-    #     with open("../data/pickle/ambiguous_candidates/{}".format(file_name), "rb") as pickle_file:
-    #         ambiguous_phrase_dict = pickle.load(pickle_file)
 
     with open(CONSTRUCTION_DIR + "ambiguous_candidates_-0.3_0.2_5_25_32_3.pickle", "rb") as pickle_file:
         ambiguous_phrase_dict = pickle.load(pickle_file)
@@ -486,7 +471,7 @@ def generate_ultimate_phrase_list(size=19500):
 if __name__ == '__main__':
 
     FILE_NAME = "unique_wiki_phrases_wo_categories"
-    CONSTRUCTION_DIR = "../../data/preparation/"
+    CONSTRUCTION_DIR = DATA_PATH + "preparation/"
 
     # ------------------------------------------------------------
     # Workflow to generate ambiguous examples for annotation
@@ -494,10 +479,13 @@ if __name__ == '__main__':
     if not exists(CONSTRUCTION_DIR):
         makedirs(CONSTRUCTION_DIR)
 
-    # handle_extracted_wiki_phrases_and_sentences()
+    handle_extracted_wiki_phrases_and_sentences()
     search_ambiguous_phrases_from_WiC()
-    # find_ambiguous_phrases(max_len_diff=3)
-    # read_output_files_and_sort_for_AMT()
+    find_ambiguous_phrases(max_len_diff=3)
+    read_output_files_and_sort_for_AMT()
 
-    # generate_ultimate_phrase_list(size=19500)
+    generate_ultimate_phrase_list(size=19500)
+    # ------------------------------------------------------------
+
+
 

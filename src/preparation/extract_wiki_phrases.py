@@ -26,6 +26,8 @@ caches = {}                 # Caches to store categories for Wiki URLs
 number_extra_sentences = 2  # Number of sentences added before and after each context sentence
 cached_stop_words = Counter(stopwords.words('english'))
 
+DATA_PATH = "../../data/"
+
 
 # Step 2: Phrase extraction
 def process_wiki_articles(pid, articles):
@@ -74,8 +76,8 @@ if __name__ == '__main__':
     # Prepare Wiki sentences by checking if the preprocessed wiki file exists to load
     # Otherwise, load the original wiki file
     start_time = time.time()
-    wiki_fp = "../data/wiki/wikiextractor/enwiki-latest-pages-articles.txt"
-    wiki_pickle_fp = "../data/wiki/wikiextractor/wiki_objects_filtered.pickle"
+    wiki_fp = DATA_PATH + "wiki/wikiextractor/enwiki-latest-pages-articles.txt"
+    wiki_pickle_fp = DATA_PATH + "wiki/wikiextractor/wiki_objects_filtered.pickle"
 
     # Step 1: Data preparation
     if exists(wiki_pickle_fp):
@@ -122,6 +124,6 @@ if __name__ == '__main__':
     print("Number of UNIQUE phrases were generated: {}".format(len(set(all_phrases))))
 
     print("Dumping all UNIQUE phrases to pickle file...")
-    wiki_phrases_pickle_fp = "../data/construction/unique_wiki_phrases_wo_categories.pickle"
+    wiki_phrases_pickle_fp = DATA_PATH + "preparation/unique_wiki_phrases_wo_categories.pickle"
     with open(wiki_phrases_pickle_fp, "wb") as pickle_file:
         pickle.dump(all_phrases, pickle_file)
