@@ -52,7 +52,7 @@ if __name__ == '__main__':
     print("Number of empty Wiki pages = {}".format(count_empty_pages))
     print("Dumping all UNIQUE Wiki URL to pickle file...")
 
-    wiki_articles_pickle_fp = DATA_PATH + "preparation/sub_wiki_url_with_categories.pickle"
+    wiki_articles_pickle_fp = DATA_PATH + "preparation/unique_wiki_urls_with_categories.pickle"
     with open(wiki_articles_pickle_fp, "wb") as pickle_file:
         pickle.dump(categories_cache_api, pickle_file)
 

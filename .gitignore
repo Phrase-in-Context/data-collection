@@ -128,15 +128,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-data/wordlist.10000
-data/annotation/data_15K_pairs_official.csv
-data/annotation/data_15K_pairs_verified_official.csv
-data/annotation/data_15K_pairs_fully_verified_official.csv
-data/annotation/ambiguous_candidates_ultimate_19500_refined.txt
 
-data/preparation/unique_wiki_phrases*
+data/preparation
+data/annotation
+data/wordlist.10000
 
 data/wiki/wikiextractor/enwiki-latest-pages-articles.txt
 data/wiki/wikiextractor/wiki_objects_filtered.pickle
 
-src/preparation/generate_final_datasets.py
+.idea
