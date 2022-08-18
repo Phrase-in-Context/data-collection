@@ -177,9 +177,10 @@ python3 find_ambiguous_phrases.py
 
 Upon completion of 6 steps, we get the following file `amt_data_19500_sorted_by_semantic_domain_latest.csv` stored under `data/preparation/` folder and ready to start the annotation phase.
 
+**We also benchmark the state-of-the-art models (e.g., PhraseBERT, DensePhrase, SimCSE) on our proposed tasks. Let's check it out [here](https://github.com/Phrase-in-Context/eval)!**
+
 See the [open issues](https://github.com/Phrase-in-Context/eval/issues) for a full list of proposed features (and
 known issues).
-
 
 <!-- LICENSE -->
 
