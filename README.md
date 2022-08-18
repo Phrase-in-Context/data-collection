@@ -150,7 +150,7 @@ From a Wikipedia dump, we perform a 6-step procedure for mining a list of mNPs s
 
 The table below is **summary** of our 3-stage data construction. **p**, *s*, *m* *d*, *q*, *l* denote target phrase, sentence, metadata, document, query, and label, respectively. In this repository, we only focus on 6-step Data Collection method to prepare data for annotation. 
 
-[![PiC collect][pic-collect]](https://github.com/Phrase-in-Context/data-collection/)
+[![PiC construct][pic-construct]](https://github.com/Phrase-in-Context/data-collection/)
 
 Please check out our [paper](https://arxiv.org/abs/2207.09068) for more details and examples.
 
@@ -175,6 +175,7 @@ python3 extract_wiki_phrases.py
 python3 find_ambiguous_phrases.py
 ```
 
+Upon completion of 6 steps, we get the following file `amt_data_19500_sorted_by_semantic_domain_latest.csv` stored under `data/preparation/` folder and ready to start the annotation phase.
 
 See the [open issues](https://github.com/Phrase-in-Context/eval/issues) for a full list of proposed features (and
 known issues).
@@ -223,4 +224,4 @@ Contact us via email or create github issues if you have any questions/requests.
 [license-url]: https://github.com/Phrase-in-Context/eval/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/thangpm
-[pic-collect]: data_collection_summarized.png
+[pic-construct]: data_collection_summarized.png
