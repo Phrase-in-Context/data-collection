@@ -13,6 +13,8 @@ from tqdm import tqdm
 from datasets import load_dataset
 from os import makedirs
 from collections import Counter
+from langdetect import detect
+
 
 tokenizer = nltk.data.load('tokenizers/punkt/PY3/english.pickle')
 
@@ -59,6 +61,16 @@ def handle_extracted_wiki_phrases_and_sentences(debug=False):
     if debug:
         removed_phrases_subset = random.sample(removed_phrases, k=100)
         [print(phrase) for phrase in removed_phrases_subset]
+
+        count_english_phrases = 0
+
+        for phrase in tqdm(removed_phrases):
+            try:
+                count_english_phrases += 1 if detect(phrase) == "en" else 0
+            except:
+                print(phrase)
+
+        print("% English phrases = {}".format(round(count_english_phrases * 1.0 / len(removed_phrases) * 100, 2)))
 
     # Remove duplicate sentences for each phrase and remove a phrase if it has less than 2 sentences
     example_dict = {key: list(set(values)) for key, values in example_dict.items()}
